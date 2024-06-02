@@ -12,6 +12,8 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
+
 @RestController
 @RequestMapping("/users")
 public class UserController {
@@ -50,19 +52,23 @@ public class UserController {
             return ResponseEntity.status(401).body("Invalid credentials");
         }
     }
+    @GetMapping("/teamMembers")
+    public  ResponseEntity<List<CreateUserDTO>> getAllTeamMemebrs(){
+        List<CreateUserDTO> cud=userService.getAllUsers();
+        List<CreateUserDTO> filteredUsers = cud.stream()
+                .filter(user -> "Team Member".equals(user.getRole()))
+                .collect(Collectors.toList());
+
+        return ResponseEntity.ok(filteredUsers);
+    }
     @GetMapping("/{id}")
-    public ResponseEntity<UserDTO> getUserById(@PathVariable Long id) {
-        Optional<User> userOptional = userService.getUserById(id);
-        if (userOptional.isPresent()) {
-            User u=userOptional.get();
-            UserDTO userDTO=new UserDTO();
-            userDTO.setId(u.getId());
-            userDTO.setUsername(u.getUsername());
-            userDTO.setEmail(u.getEmail());
-            return ResponseEntity.ok(userDTO);
-        } else {
-            return ResponseEntity.notFound().build();
+    public ResponseEntity<UserResponse> getUserById(@PathVariable Long id) {
+        Optional<User> user = userService.getUserById(id);
+        if (user.isPresent()) {
+            User foundUser = user.get();
+            return ResponseEntity.ok(new UserResponse(foundUser.getId(), foundUser.getUsername(), foundUser.getRole()));
         }
+        return ResponseEntity.ok(null);
     }
 
     private static class UserResponse {

@@ -120,6 +120,7 @@ public class ProjectService {
         taskDTO.setStatus(task.getStatus());
         taskDTO.setPriority(task.getPriority());
         taskDTO.setStartDate(task.getStartDate());
+        taskDTO.setDueDate(task.getDueDate());
         taskDTO.setCompletedDate(task.getEndDate());
 
        // UserDTO assignedToDTO = convertUserToDTO(task.getAssignedTo());

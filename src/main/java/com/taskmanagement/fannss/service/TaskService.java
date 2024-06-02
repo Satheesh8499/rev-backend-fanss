@@ -29,12 +29,13 @@ public class TaskService {
     @Autowired
     private ProjectRepository projectRepository;
 
-    public Task createTask(CreateTaskDTO createTaskDTO) {
+    public TaskDTO createTask(CreateTaskDTO createTaskDTO) {
         Task task = new Task();
         task.setTaskName(createTaskDTO.getName());
         task.setTaskDescription(createTaskDTO.getDescription());
         task.setStartDate(createTaskDTO.getStartDate());
         task.setEndDate(createTaskDTO.getCompletedDate());
+        task.setDueDate(createTaskDTO.getDueDate());
         task.setStatus(createTaskDTO.getStatus());
         task.setPriority(createTaskDTO.getPriority());
 
@@ -50,7 +51,8 @@ public class TaskService {
                 .orElseThrow(() -> new RuntimeException("Creating user not found"));
         task.setCreatedBy(createdBy);
 
-        return taskRepository.save(task);
+        Task task1= taskRepository.save(task);
+        return convertDTO(task1);
     }
 
     public void deleteTask(Long taskId, Long userId) {

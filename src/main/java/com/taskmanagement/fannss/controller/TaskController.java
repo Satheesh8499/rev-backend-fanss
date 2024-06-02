@@ -19,7 +19,7 @@ public class TaskController {
     private TaskService taskService;
 
     @PostMapping
-    public ResponseEntity<Task> createTask(
+    public ResponseEntity<TaskDTO> createTask(
             @RequestHeader("userId") Long userId,
             @RequestBody CreateTaskDTO createTaskDTO) {
 
@@ -27,7 +27,7 @@ public class TaskController {
         createTaskDTO.setAssignedBy(userId);
 
         // Assuming taskService.createTask creates the task and saves it
-        Task task = taskService.createTask(createTaskDTO);
+        TaskDTO task = taskService.createTask(createTaskDTO);
         return new ResponseEntity<>(task, HttpStatus.CREATED);
     }
 
